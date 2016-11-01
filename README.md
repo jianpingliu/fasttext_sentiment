@@ -21,7 +21,7 @@ sh train.sh
 
 ### Run app
 
-To run the flask app, simple type:
+To run the flask app, simply type:
 
 ```
 python app.py
