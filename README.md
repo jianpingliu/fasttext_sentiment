@@ -11,12 +11,20 @@ Here is how the app looks like:
 
 Amazon reviews from 1995 to 2013 are used for training. They can be downloaded from [here](https://archive.org/details/amazon-reviews-1995-2013). Downloaded zip file is put under the folder data/amazon/.
 
-### Train model
+### Train fastText model
 
 The classificaiton can be trained using:
 
 ```
 sh train.sh
+```
+
+### Run app
+
+To run the flask app, simple type:
+
+```
+python app.py
 ```
 
 ### References
