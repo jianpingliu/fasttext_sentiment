@@ -1,0 +1,34 @@
+<div class="container">
+    <div ng-if="ft.formsubmit">
+        <form role="form">
+            <div class="form-group">
+                <label for="inputdefault">Title</label>
+                <input class="form-control" id="title" type="text" placeholder="Enter title" ng-model="ft.title">
+            </div>
+            <div class="form-group">
+                <label for="inputlg">Text</label>
+                <textarea class="form-control" rows=10 id="text" placeholder="Enter text" ng-model="ft.text"></textarea>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" ng-click="ft.submit()">Classify</button>
+    </div>
+    <div ng-if="ft.showresults">
+        <h2></h2>
+        <div class="table table-striped">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Rating</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in ft.prediction">
+                        <td>{{row.rating}}</td>
+                        <td>{{row.score}}<a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

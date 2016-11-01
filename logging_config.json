@@ -1,0 +1,41 @@
+{
+    "version": 1,
+    "loggers": {
+		"root": {
+		    "level": "DEBUG",
+		    "handlers": ["console"]
+		},
+		"fasttext": {
+		    "level": "DEBUG",
+		    "handlers": ["console", "file"],
+		    "qualname": "fasttext",
+		    "propogate": "no"
+		}
+    },
+    "handlers": {
+		"console": {
+		    "class": "logging.StreamHandler",
+		    "level": "DEBUG",
+		    "formatter": "console",
+		    "stream": "ext://sys.stdout"
+		},
+		"file": {
+		    "class": "logging.handlers.RotatingFileHandler",
+		    "level": "DEBUG",
+		    "formatter": "log",
+		    "filename": "fasttext.log",
+		    "maxBytes": 1000000,
+		    "backupCount": 3
+		}
+    },
+    "formatters": {
+		"console": {
+		    "format": "%(asctime)s.%(msecs).03d [%(levelname)s] %(message)s",
+		    "datefmt": "%Y-%m-%d %H:%M:%S"
+		},
+		"log": {
+		    "format": "%(asctime)s.%(msecs).03d [%(levelname)s] %(filename)s - %(funcName)s >>> %(message)s",
+		    "datefmt": "%Y-%m-%d %H:%M:%S"
+		}
+    }
+}
