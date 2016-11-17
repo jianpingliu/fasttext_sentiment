@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 
@@ -40,6 +41,11 @@ def predict(content):
 def write_file(content):
     title = content['title']
     text = content['text'][:2000]
+
+    # clean text
+    title = re.sub(r"[^A-Za-z0-9\!\(\)\',\.\?]", " ", title)
+    text = re.sub(r"[^A-Za-z0-9\!\(\)\',\.\?]", " ", text)
+
     if title == '' and text == '':
         status = 1
     else:
@@ -49,16 +55,29 @@ def write_file(content):
     return status
 
 def call_fasttext():
+    if not os.path.exists(os.path.join(DIR, 'fasttext')):
+        logger.error("fasttext does not exist")
+        return 1
+
+    if not os.path.exists(os.path.join(DATADIR, DATA_FILE)):
+        logger.error("data/text does not exist")
+        return 2
+
     try:
         shell_script = os.path.join(DIR, PREDICT_SCRIPT)
         cmd = "sh %s" % shell_script
         exit = subprocess.call(cmd, shell=True)
         status = 0
     except:
-        status = 2
+        logger.error("call fasttext failed")
+        status = 3
     return status
 
 def read_prediction():
+    if not os.path.exists(os.path.join(RESULTSDIR, PREDICT_FILE)):
+        logger.error("result/native_content_predict does not exist")
+        return 1
+
     prediction = []
     with open(os.path.join(RESULTSDIR, PREDICT_FILE), 'r') as f:
         prediction = f.readlines()
