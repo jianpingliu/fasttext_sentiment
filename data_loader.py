@@ -2,10 +2,7 @@ import gzip
 import os
 import csv
 import random
-import sys
 
-reload(sys)  
-sys.setdefaultencoding('utf-8')
 
 # data folder
 DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'amazon')
@@ -37,25 +34,23 @@ def load_data(dev=True):
         except KeyError:
             continue
 
-    if dev:
-        N = len(rows)
-        test_N = 10000
-        train = rows[:-test_N]
-        test = rows[-test_N:]
-    else:
-        train = rows
-        test = []
+    N = len(rows)
+    test_N = 10000
+    train = rows[:-test_N]
+    test = rows[-test_N:]
 
-    print "train: %d" % len(train)
-    with open(TRAIN_FILE, 'w') as f:
+    print "test: %d" % len(test)
+    with open(TEST_FILE, 'w') as f:
         csvwriter = csv.writer(f)
-        csvwriter.writerows(train)
+        csvwriter.writerows(test)
 
-    if dev:
-        print "test: %d" % len(test)
-        with open(TEST_FILE, 'w') as f:
-            csvwriter = csv.writer(f)
-            csvwriter.writerows(test)
+def normalize_text(input_filename, output_filename):
+    with open(input_filename, 'r') as in_file:
+        with open(output_filename, 'w') as out_file:
+            for line in in_file:
+                out_file.write(utils.normalize_text(line) + "\n")
 
 if __name__ == '__main__':
-    load_data(dev=True)
+    load_data()
+    normalize_text(TRAIN_FILE, os.path.join(DATA_DIR, 'train.data'))
+    normalize_text(TEST_FILE, os.path.join(TEST_DIR, 'test.data'))

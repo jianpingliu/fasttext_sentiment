@@ -1,8 +1,11 @@
+import os
+
 from flask import Flask, jsonify, request, send_from_directory
 
+import fasttext as ft
+
 # local
-import classifier
-from utils import STATIC_DIR, JS_DIR, VIEWS_DIR
+from utils import STATIC_DIR, JS_DIR, VIEWS_DIR, RESULT_DIR, MODEL_NAME
 
 # logging
 import utils
@@ -10,13 +13,42 @@ import logging
 
 logger = logging.getLogger("fasttext")
 
+# load model
+model_file = os.path.join(RESULT_DIR, MODEL_NAME)
+classifier = ft.load_model(model_file + '.bin', label_prefix= '__label__')
+
+def make_prediction(content):
+    logger.info("title: %s", content['title'])
+    logger.info("text: %s", content['text'])
+
+    title = content['title']
+    text = content['text'][:2000]
+
+    text = ',%s.%s' % (title, text)
+
+    # clean text
+    text = utils.normalize_text(text)
+
+    labels = classifier.predict_proba([text], k=5)[0]
+
+    labels = map(lambda (k, v): {'rating': k, 'score': v}, labels)
+
+    logger.info("prediction: %s", labels)
+
+    result = {'status': 0, 'prediction': labels}
+
+    return result
+
+
 app = Flask(__name__)
 
 @app.route("/api/classify_text", methods=['POST'])
 def classify_text():
     data = request.get_json()
     content = data['content']
-    response = classifier.predict(content)
+
+    response = make_prediction(content)
+
     return jsonify(response)
 
 @app.route("/js/<path:path>")

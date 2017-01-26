@@ -1,8 +1,8 @@
 import os
-import subprocess
+import fasttext as ft
 
 # path
-from utils import DATA_DIR, DIR, RESULT_DIR
+from utils import DATA_DIR, DIR, RESULT_DIR, MODEL_NAME
 
 # logging
 import utils
@@ -10,42 +10,21 @@ import logging
 
 logger = logging.getLogger("fasttext")
 
-RAW_DATA_FILE = os.path.join(DATA_DIR, 'amazon', 'train.csv')
-TRAIN_DATA_FILE = os.path.join(DATA_DIR, 'train.data')
-
-def normalize_text(input_filename, output_filename):
-    with open(input_filename, 'r') as in_file:
-        with open(output_filename, 'w') as out_file:
-            for line in in_file:
-                out_file.write(utils.normalize_text(line) + "\n")
-
-    logger.info("training data is normalized sucessfully")
-
-def train_model():
-    cmd = '''
-          {0}/fasttext supervised \
-           -input {1}/train.data \
-           -output {2}/amazon \
-           -dim 20 \
-           -lr 0.25 \
-           -wordNgrams 2 \
-           -minCount 20 \
-           -bucket 1000000 \
-           -epoch 5 \
-           -thread 10 \
-           > /dev/null
-        '''
-    cmd = cmd.format(DIR, DATA_DIR, RESULT_DIR)
-    subprocess.call(cmd, shell=True)
-
-    logger.info("training model successfully")
+TRAIN_FILE = os.path.join(DATA_DIR, 'train.data')
+TEST_FILE = os.path.join(DATA_DIR, 'test.data')
 
 def main():
-    # normalize training data
-    #normalize_text(RAW_DATA_FILE, TRAIN_DATA_FILE)
+    input_file = TRAIN_FILE
+    out_file = os.path.join(RESULT_DIR, MODEL_NAME)
+    classifier = ft.supervised(input_file, out_file, dim=20, lr=0.25, word_ngrams=2, min_count=20,
+                               bucket=1000000, epoch=5, thread=10, silent=0, label_prefix="__label__")
 
-    # train model
-    train_model()
+    # test the classifier
+    result = classifier.test(TEST_DATA_FILE)
+
+    logger.info('P@1: %s', result.precision)
+    logger.info('R@1: %s', result.recall)
+    logger.info('Number of examples: %s', result.nexamples)
 
 if __name__ == '__main__':
     utils.config_logging()
