@@ -1,7 +1,5 @@
 import os
-
 from flask import Flask, jsonify, request, send_from_directory
-
 import fasttext as ft
 
 # local
@@ -15,7 +13,8 @@ logger = logging.getLogger("fasttext")
 
 # load model
 model_file = os.path.join(RESULT_DIR, MODEL_NAME)
-classifier = ft.load_model(model_file + '.bin', label_prefix= '__label__')
+classifier = ft.load_model(model_file + '.bin', label_prefix='__label__')
+
 
 def make_prediction(content):
     logger.info("title: %s", content['title'])
@@ -42,6 +41,7 @@ def make_prediction(content):
 
 app = Flask(__name__)
 
+
 @app.route("/api/classify_text", methods=['POST'])
 def classify_text():
     data = request.get_json()
@@ -51,19 +51,23 @@ def classify_text():
 
     return jsonify(response)
 
+
 @app.route("/js/<path:path>")
 def js(path):
     return send_from_directory(JS_DIR, path)
+
 
 @app.route("/views/<path:path>")
 def view(path):
     return send_from_directory(VIEWS_DIR, path)
 
+
 @app.route("/")
 def index():
     return send_from_directory(STATIC_DIR, "index.html")
 
+
 if __name__ == "__main__":
     utils.config_logging()
-    
+
     app.run(host='0.0.0.0', debug=True, port=3000)

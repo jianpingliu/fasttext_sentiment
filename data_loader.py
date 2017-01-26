@@ -3,12 +3,13 @@ import os
 import csv
 import random
 
-
 # data folder
-DATADIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'amazon')
+DATADIR = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), 'data', 'amazon')
 REVIEW_DATA = os.path.join(DATADIR, 'Electronics.txt.gz')
 TRAIN_FILE = os.path.join(DATADIR, 'train.csv')
 TEST_FILE = os.path.join(DATADIR, 'test.csv')
+
 
 def parse(filename):
     f = gzip.open(filename, 'r')
@@ -21,15 +22,17 @@ def parse(filename):
             entry = {}
             continue
         eName = l[:colonPos]
-        rest = l[colonPos+2:]
+        rest = l[colonPos + 2:]
         entry[eName] = rest
     yield entry
+
 
 def load_data(dev=True):
     rows = []
     for e in parse(REVIEW_DATA):
         try:
-            row = ( int(float(e['review/score'])), e['review/summary'], e['review/text'] )
+            row = (int(float(e['review/score'])), e['review/summary'],
+                   e['review/text'])
             rows.append(row)
         except KeyError:
             continue
@@ -44,11 +47,13 @@ def load_data(dev=True):
         csvwriter = csv.writer(f)
         csvwriter.writerows(test)
 
+
 def normalize_text(input_filename, output_filename):
     with open(input_filename, 'r') as in_file:
         with open(output_filename, 'w') as out_file:
             for line in in_file:
                 out_file.write(utils.normalize_text(line) + "\n")
+
 
 if __name__ == '__main__':
     load_data()
