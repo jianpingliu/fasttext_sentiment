@@ -31,7 +31,7 @@ def main():
         label_prefix="__label__")
 
     # test the classifier
-    result = classifier.test(TEST_DATA_FILE)
+    result = classifier.test(TEST_FILE)
 
     logger.info('P@1: %s', result.precision)
     logger.info('R@1: %s', result.recall)
