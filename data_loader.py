@@ -7,10 +7,11 @@ import utils
 
 # data folder
 DATA_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), 'data', 'amazon')
-REVIEW_DATA = os.path.join(DATA_DIR, 'Electronics.txt.gz')
-TRAIN_FILE = os.path.join(DATA_DIR, 'train.csv')
-TEST_FILE = os.path.join(DATA_DIR, 'test.csv')
+    os.path.dirname(os.path.abspath(__file__)), 'data')
+TRAIN_DATA_DIR = os.path.join(DATA_DIR, 'amazon')
+REVIEW_DATA = os.path.join(TRAIN_DATA_DIR, 'Electronics.txt.gz')
+TRAIN_FILE = os.path.join(TRAIN_DATA_DIR, 'train.csv')
+TEST_FILE = os.path.join(TRAIN_DATA_DIR, 'test.csv')
 
 
 def parse(filename):
@@ -60,4 +61,4 @@ def normalize_text(input_filename, output_filename):
 if __name__ == '__main__':
     load_data()
     normalize_text(TRAIN_FILE, os.path.join(DATA_DIR, 'train.data'))
-    normalize_text(TEST_FILE, os.path.join(TEST_DIR, 'test.data'))
+    normalize_text(TEST_FILE, os.path.join(DATA_DIR, 'test.data'))
