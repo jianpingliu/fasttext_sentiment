@@ -3,12 +3,14 @@ import os
 import csv
 import random
 
+import utils
+
 # data folder
-DATADIR = os.path.join(
+DATA_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'data', 'amazon')
-REVIEW_DATA = os.path.join(DATADIR, 'Electronics.txt.gz')
-TRAIN_FILE = os.path.join(DATADIR, 'train.csv')
-TEST_FILE = os.path.join(DATADIR, 'test.csv')
+REVIEW_DATA = os.path.join(DATA_DIR, 'Electronics.txt.gz')
+TRAIN_FILE = os.path.join(DATA_DIR, 'train.csv')
+TEST_FILE = os.path.join(DATA_DIR, 'test.csv')
 
 
 def parse(filename):
